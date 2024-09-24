@@ -4,18 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Form</title>
+    <link rel="stylesheet" href="home.css">
     <script>
-        function resetForm() {
-            // Reset the form fields
-            document.getElementById("studentForm").reset();
+        async function submitForm(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = document.getElementById('studentForm');
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors' // Bypass CORS restrictions
+                });
+
+                const result = await response.text();
+                alert(result); // Show the result from the server
+                form.reset(); // Clear the form fields after submission
+            } catch (error) {
+                console.error('Error:', error);
+                alert('There was an error submitting the form.');
+            }
         }
     </script>
-    <link rel="stylesheet" href="home.css">
 </head>
 <body>
     <div class="form-container">
         <h2>Student Information</h2>
-        <form form id="studentForm" action="https://script.google.com/macros/s/AKfycbwHSdTjDfVGIYdVcv23bIH_NsnImMy-DAHHl0-uPadESTpae-DFyRBwGENMHtSvNxeU/exec" method="POST" onsubmit="resetForm()>
+        <form id="studentForm" action="https://script.google.com/macros/s/AKfycbwHSdTjDfVGIYdVcv23bIH_NsnImMy-DAHHl0-uPadESTpae-DFyRBwGENMHtSvNxeU/exec" method="POST" onsubmit="submitForm(event)">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
             <label for="roll">Roll Number:</label>
@@ -24,21 +41,5 @@
         </form>
         <p id="responseMessage"></p>
     </div>
-
-    <script>
-        document.getElementById('studentForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent default form submission
-        
-            const formData = new FormData(event.target);
-            const response = await fetch('https://script.google.com/macros/s/AKfycbwHSdTjDfVGIYdVcv23bIH_NsnImMy-DAHHl0-uPadESTpae-DFyRBwGENMHtSvNxeU/exec', {
-                method: 'POST',
-                body: formData,
-                mode: 'no-cors' // Bypass CORS restrictions
-            });
-        
-            const result = await response.text();
-            alert(result); // Show the result from the server
-        });
-        </script>
 </body>
 </html>
